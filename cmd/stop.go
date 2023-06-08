@@ -6,7 +6,8 @@ package cmd
 
 import (
 	"fmt"
-
+	"os"
+	"strconv"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +22,30 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("stop called")
+		if len(args)!=1 {
+			fmt.Println("Please specify one pid")
+			os.Exit(1)
+		}
+		pid, err := strconv.Atoi(args[0])
+		if err != nil {
+		fmt.Println("Invalid PID:", args[0])
+		os.Exit(1)
+		}
+
+		process, err := os.FindProcess(pid)
+		if err != nil {
+			fmt.Println("Process not found for PID:", pid)
+			os.Exit(1)
+		}
+		//kill the process
+		err = process.Kill()
+		if err != nil {
+			fmt.Println("Failed to kill process:", err)
+			os.Exit(1)
+		}
+		fmt.Println("Process stopped successfully")
+		
+
 	},
 }
 
