@@ -7,7 +7,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/mitchellh/go-ps"
+	"github.com/adfoke/pman/process"
 )
 
 // listCmd represents the list command
@@ -21,8 +21,8 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-				// Get a list of all processes.
-		processes, err := ps.Processes()
+		//get the list of the processes
+		processes, err := process.listProcesses()
 		if err != nil {
 			panic(err)
 		}
