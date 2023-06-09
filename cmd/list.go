@@ -22,14 +22,15 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		//get the list of the processes
-		processes, err := process.listProcesses()
+		processes, err := process.ListProcesses()
 		if err != nil {
 			panic(err)
 		}
 		//print all processes
 		for _, p := range processes {
-			fmt.Printf("%d\t%s\n", p.Pid(), p.Executable())
+			fmt.Println(p)
 		}
+
 	},
 }
 

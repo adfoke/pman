@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"github.com/spf13/cobra"
+	"github.com/adfoke/pman/process"
 )
 
 // stopCmd represents the stop command
@@ -26,25 +27,24 @@ to quickly create a Cobra application.`,
 			fmt.Println("Please specify one pid")
 			os.Exit(1)
 		}
-		pid, err := strconv.Atoi(args[0])
+		pid, err := strconv.ParseUint(args[0], 10, 32)
 		if err != nil {
 		fmt.Println("Invalid PID:", args[0])
 		os.Exit(1)
 		}
 
-		process, err := os.FindProcess(pid)
+		process, err := process.GetProcessInfo(uint32(pid))
 		if err != nil {
 			fmt.Println("Process not found for PID:", pid)
 			os.Exit(1)
 		}
-		//kill the process
-		err = process.Kill()
+		//termintor the process
+		err = process.TerminateProcess(uint32(pid))
 		if err != nil {
-			fmt.Println("Failed to kill process:", err)
+			fmt.Println("Error terminating process:", err)
 			os.Exit(1)
 		}
-		fmt.Println("Process stopped successfully")
-		
+		fmt.Println("Process terminated successfully")		
 
 	},
 }

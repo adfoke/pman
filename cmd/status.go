@@ -9,7 +9,8 @@ import (
 	"strconv"
 	"os"
 	"github.com/spf13/cobra"
-	"github.com/mitchellh/go-ps"
+	"github.com/adfoke/pman/process"
+
 )
 
 // statusCmd represents the status command
@@ -27,31 +28,19 @@ to quickly create a Cobra application.`,
 			fmt.Println("Please specify one pid")
 			os.Exit(1)
 		}
-		pid, err := strconv.Atoi(args[0])
+		//convert the pid to uint32
+		pid, err := strconv.ParseUint(args[0], 10, 32)
 		if err != nil {
-            fmt.Println("Invalid pid:", args[0])
-            os.Exit(1)
-        }
-		processes, err := ps.Processes()
-        if err != nil {
-            fmt.Println("Failed to get processes:", err)
-            os.Exit(1)
-        }
-		var process ps.Process
-        for _, p := range processes {
-            if p.Pid() == pid {
-                process = p
-                break
-            }
-        }
-		if process.Pid() == 0 {
-            fmt.Println("Process not found:", pid)
-            os.Exit(1)
-        }
-		//print the detail of the pid
-		fmt.Printf("Process ID: %d\n", process.Pid())
-		fmt.Printf("Parent Process ID: %d\n", process.PPid())
-		fmt.Printf("Executable: %s\n", process.Executable())
+			fmt.Println("Invalid PID:", args[0])
+			os.Exit(1)
+		}
+		//get the process info
+		appPtr, err := process.GetProcessInfo(uint32(pid))
+		if err != nil {
+			fmt.Println("Process not found for PID:", pid)
+			os.Exit(1)
+		}
+		fmt.Println(appPtr)
 	},
 }
 

@@ -7,8 +7,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"github.com/spf13/cobra"
+	"github.com/adfoke/pman/process"
 )
 
 // startCmd represents the start command
@@ -23,19 +23,19 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args)!=1 {
-			fmt.Println("Please specify one app name")
+			fmt.Println("Please specify one command")
 			os.Exit(1)
 		}
-		pname := args[0]
-		//start the process
-		cmd1 := exec.Command(pname)
-		err := cmd1.Start()
+		//get the command
+		command := args[0]
+		//create the application
+		appPtr , err := process.CreateProcess(command)
 		if err != nil {
-		  fmt.Println("Failed to start process:", err)
-		  os.Exit(1)
+			panic(err)
 		}
-		fmt.Printf("Process ID: %d\n", cmd1.Process.Pid)
-		fmt.Printf("Parent Process ID: %d\n", os.Getpid())
+		//print the app info
+		fmt.Println(appPtr)
+
 	},
 }
 

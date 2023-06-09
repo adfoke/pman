@@ -16,7 +16,7 @@ var (
 	)
 
 
-func listProcesses() ([]entry, error) {
+func ListProcesses() ([]entry, error) {
 	//get the list of windows processes
 	procs, err := windows.CreateToolhelp32Snapshot(windows.TH32CS_SNAPPROCESS, 0)
 	if err != nil {
@@ -42,7 +42,7 @@ func listProcesses() ([]entry, error) {
 }
 
 
-func getProcessInfo(pid uint32) (entry, error) {
+func GetProcessInfo(pid uint32) (entry, error) {
 	//find the process by pid
 	procs, err := windows.CreateToolhelp32Snapshot(windows.TH32CS_SNAPPROCESS, pid)
 	if err != nil {
@@ -58,7 +58,7 @@ func getProcessInfo(pid uint32) (entry, error) {
 	}
 	return entry(procEntry), nil	
 }
-func createProcess(appName string) (*entry, error) {
+func CreateProcess(appName string) (*entry, error) {
 	//create the process by appname
 	var startupInfo windows.StartupInfo
 	var processInfo windows.ProcessInformation
@@ -76,8 +76,8 @@ func createProcess(appName string) (*entry, error) {
 
 }
 
-func terminateProcess(pid uint32) error {
-	handle, err := getProcessInfo(pid)
+func TerminateProcess(pid uint32) error {
+	handle, err := GetProcessInfo(pid)
 	if err != nil {
 		return fmt.Errorf("Failed to get process info: %v", err)
 	}
