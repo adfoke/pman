@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"os"
 	"github.com/spf13/cobra"
-	"github.com/adfoke/pman/process"
+	"github.com/mitchellh/go-ps"
 
 )
 
@@ -28,19 +28,20 @@ to quickly create a Cobra application.`,
 			fmt.Println("Please specify one pid")
 			os.Exit(1)
 		}
-		//convert the pid to uint32
 		pid, err := strconv.ParseUint(args[0], 10, 32)
 		if err != nil {
 			fmt.Println("Invalid PID:", args[0])
 			os.Exit(1)
 		}
 		//get the process info
-		appPtr, err := process.GetProcessInfo(uint32(pid))
+		process, err := ps.FindProcess(int(pid))
 		if err != nil {
-			fmt.Println("Process not found for PID:", pid)
+			fmt.Println("Error finding process:", err)
 			os.Exit(1)
 		}
-		fmt.Println(appPtr)
+		//print the process info
+		fmt.Printf("PID: %d\n", process.Pid())
+
 	},
 }
 

@@ -7,9 +7,10 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strconv"
 	"github.com/spf13/cobra"
-	"github.com/adfoke/pman/process"
+	"github.com/mitchellh/go-ps"
 )
 
 // stopCmd represents the stop command
@@ -32,19 +33,19 @@ to quickly create a Cobra application.`,
 		fmt.Println("Invalid PID:", args[0])
 		os.Exit(1)
 		}
-
-		process, err := process.GetProcessInfo(uint32(pid))
+		//get the process info
+		process, err := ps.FindProcess(int(pid))
 		if err != nil {
-			fmt.Println("Process not found for PID:", pid)
-			os.Exit(1)
+		fmt.Println("Error finding process:", err)
+		os.Exit(1)
 		}
-		//termintor the process
-		err = process.TerminateProcess(uint32(pid))
+		//stop the process
+		err = exec.Command("kill", "-STOP", strconv.Itoa(process.Pid())).Run()
 		if err != nil {
-			fmt.Println("Error terminating process:", err)
-			os.Exit(1)
+		fmt.Println("Error stopping process:", err)
+		os.Exit(1)
 		}
-		fmt.Println("Process terminated successfully")		
+		fmt.Println("Process stopped:", process.Pid())	
 
 	},
 }

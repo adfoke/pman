@@ -7,8 +7,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"github.com/spf13/cobra"
-	"github.com/adfoke/pman/process"
+
 )
 
 // startCmd represents the start command
@@ -29,12 +30,16 @@ to quickly create a Cobra application.`,
 		//get the command
 		command := args[0]
 		//create the application
-		appPtr , err := process.CreateProcess(command)
+		app := exec.Command(command)
+		//start the application
+		err := app.Start()
 		if err != nil {
-			panic(err)
+			fmt.Println("Error:", err)
+			os.Exit(1)
 		}
-		//print the app info
-		fmt.Println(appPtr)
+		fmt.Println("Process ID:", app.Process.Pid)
+
+	
 
 	},
 }

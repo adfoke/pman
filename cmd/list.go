@@ -7,7 +7,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/adfoke/pman/process"
+	"github.com/mitchellh/go-ps"
 )
 
 // listCmd represents the list command
@@ -22,15 +22,14 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		//get the list of the processes
-		processes, err := process.ListProcesses()
+		entries, err := ps.Processes()
 		if err != nil {
 			panic(err)
 		}
-		//print all processes
-		for _, p := range processes {
-			fmt.Println(p)
+		//print the list
+		for _, entry := range entries {
+			fmt.Printf("%d\t%s\n", entry.Pid(), entry.Executable())
 		}
-
 	},
 }
 
